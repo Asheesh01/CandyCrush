@@ -1,25 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     position: relative;
-    background:url("./background.jpg") no-repeat center center fixed;
-    background-size:cover;
+    background: url("./background.jpg") no-repeat center center fixed;
+    background-size: cover;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     text-align: center;
+    margin: 0;
+    padding: 10px;
+    /* Prevent pull-to-refresh / scroll while playing */
+    overscroll-behavior: none;
 }
 
-#board{
-    width: 450px;
-    height: 450px;
+#board {
+    /* Scales to 90% of the smallest viewport dimension so it fits any phone */
+    width: min(450px, 90vmin);
+    height: min(450px, 90vmin);
     background-color: lightblue;
     border: 5px solid slategray;
     border-radius: 10px;
     margin: 0 auto;
     display: flex;
-   flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
-#board img{
-    width: 50px;
-    height: 50px;
-} 
-
+#board img {
+    width: calc(min(450px, 90vmin) / 9);
+    height: calc(min(450px, 90vmin) / 9);
+    /* CRITICAL: tells the browser NOT to handle touch gestures
+       so our touchstart / touchend events fire correctly */
+    touch-action: none;
+    -webkit-user-drag: auto;
+    user-select: none;
+}
