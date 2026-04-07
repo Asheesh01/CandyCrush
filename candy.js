@@ -20,7 +20,7 @@ window.onload = function () {
     setTimeout(function () {
         score = 0;
         document.getElementById("score").innerText = 0;
-    }, 500);
+    }, 10);
 }
 
 function randomCandy() {
