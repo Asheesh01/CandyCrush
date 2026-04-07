@@ -8,12 +8,19 @@ let otherTile;
 
 window.onload = function () {
     startgame();
-
-    window.setInterval(function(){
+    score = 0;
+    window.setInterval(function () {
         crushCandy();
         slideCandy();
         genrateCandy();
     }, 10);
+
+    // Reset score after the board finishes auto-crushing
+    // any accidental 3-in-a-row from the random initial placement
+    setTimeout(function () {
+        score = 0;
+        document.getElementById("score").innerText = 0;
+    }, 500);
 }
 
 function randomCandy() {
@@ -28,18 +35,18 @@ function startgame() {
             tile.id = r.toString() + "-" + c.toString();
             tile.src = "./images/" + randomCandy() + ".png";
 
-            // ── Mouse / Desktop drag events ──
+            // Mouse / Desktop drag events
             tile.addEventListener("dragstart", dragStart);
-            tile.addEventListener("dragover",  dragOver);
+            tile.addEventListener("dragover", dragOver);
             tile.addEventListener("dragenter", dragEnter);
             tile.addEventListener("dragleave", dragLeave);
-            tile.addEventListener("drop",      dragDrop);
-            tile.addEventListener("dragend",   dragEnd);
+            tile.addEventListener("drop", dragDrop);
+            tile.addEventListener("dragend", dragEnd);
 
-            // ── Touch / Mobile events ──
+            // Touch / Mobile events
             tile.addEventListener("touchstart", touchStart, { passive: false });
-            tile.addEventListener("touchmove",  touchMove,  { passive: false });
-            tile.addEventListener("touchend",   touchEnd,   { passive: false });
+            tile.addEventListener("touchmove", touchMove, { passive: false });
+            tile.addEventListener("touchend", touchEnd, { passive: false });
 
             document.getElementById("board").append(tile);
             row.push(tile);
@@ -48,22 +55,21 @@ function startgame() {
     }
 }
 
-// ─────────────────────────────────────────
+
 //  DRAG HANDLERS (desktop)
-// ─────────────────────────────────────────
+
 function dragStart() { currTile = this; }
 function dragOver(e) { e.preventDefault(); }
 function dragEnter(e) { e.preventDefault(); }
-function dragLeave() {}
+function dragLeave() { }
 function dragDrop() { otherTile = this; }
 
 function dragEnd() {
     swapTiles(currTile, otherTile);
 }
 
-// ─────────────────────────────────────────
+
 //  TOUCH HANDLERS (mobile)
-// ─────────────────────────────────────────
 function touchStart(e) {
     e.preventDefault();
     currTile = this;
@@ -89,25 +95,23 @@ function touchEnd(e) {
     }
 }
 
-// ─────────────────────────────────────────
 //  SHARED SWAP LOGIC
-// ─────────────────────────────────────────
 function swapTiles(tile1, tile2) {
     if (!tile1 || !tile2) return;
     if (tile1.src.includes("blank") || tile2.src.includes("blank")) return;
 
     let cords1 = tile1.id.split("-");
-    let r  = parseInt(cords1[0]);
-    let c  = parseInt(cords1[1]);
+    let r = parseInt(cords1[0]);
+    let c = parseInt(cords1[1]);
 
     let cords2 = tile2.id.split("-");
     let r2 = parseInt(cords2[0]);
     let c2 = parseInt(cords2[1]);
 
-    let moveLeft  = c2 == c - 1 && r == r2;
+    let moveLeft = c2 == c - 1 && r == r2;
     let moveRight = c2 == c + 1 && r == r2;
-    let moveUp    = r2 == r - 1 && c == c2;
-    let moveDown  = r2 == r + 1 && c == c2;
+    let moveUp = r2 == r - 1 && c == c2;
+    let moveDown = r2 == r + 1 && c == c2;
 
     let isAdjacent = moveLeft || moveRight || moveUp || moveDown;
 
@@ -125,9 +129,7 @@ function swapTiles(tile1, tile2) {
     }
 }
 
-// ─────────────────────────────────────────
 //  GAME LOGIC
-// ─────────────────────────────────────────
 function crushCandy() {
     crushThree();
     document.getElementById("score").innerText = score;
